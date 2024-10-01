@@ -17,3 +17,16 @@ rows = id
 columns :: Matrix a -> [[a]]
 columns = transpose
 
+safeBangBang :: Int -> [a] -> Maybe a
+safeBangBang _ [] = Nothing
+safeBangBang 0 (x : _) = Just x
+safeBangBang n (x : xs) = safeBangBang (n - 1) xs
+
+get :: Int -> Int -> Matrix a -> Maybe a
+get row col mx = do
+  r <- safeBangBang row mx 
+  c <- safeBangBang col r 
+  pure c
+
+get' :: (Int, Int) -> Matrix a -> Maybe a
+get' = uncurry get
