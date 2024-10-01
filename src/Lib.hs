@@ -32,32 +32,18 @@ get row col mx = do
 get' :: (Int, Int) -> Matrix a -> Maybe a
 get' = uncurry get
 
-findWithIndex :: (a -> Bool) -> [a] -> Maybe (Int, a)
-findWithIndex pred lst =
-  let findWithIndex' _ _ [] = Nothing
-      findWithIndex' idx pred (x : xs) =
-        if pred x
-        then Just (idx, x)
-        else findWithIndex' (idx + 1) pred xs
-  in findWithIndex' 0 pred lst
-
 zeroComp :: (Num a, Ord a) => [a] -> [a] -> Ordering
 zeroComp =
   let zilch = (== 0)
       zeroCount = length . takeWhile zilch
   in compare `on` zeroCount
 
-compToPred :: (a -> a -> Ordering) -> a -> a -> Bool
-compToPred comp x y =
-  case comp x y of
-    GT -> True
-    EQ -> True
-    LT -> False
-
 swap :: Ord a => (a -> a -> Ordering) -> [a] -> [a]
-swap comp [] = []
-swap comp lst@(x : xs) =
-  let greaterThan = compToPred comp
-  in case find (`greaterThan` x) xs of
-       Just found -> insertBy comp x xs
-       Nothing -> lst 
+swap _ [] = []
+swap cmp (x : xs) =
+  let mayb = do
+        found <- find (\e -> cmp e x == GT) xs
+        pure (found : delete found (insertBy cmp x xs))
+  in case mayb of
+    Just output -> output
+    Nothing -> x : xs
