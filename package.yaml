@@ -1,9 +1,6 @@
 name:                geometric-algorithms
 version:             0.1.0.0
 
-extra-source-files:
-- README.md
-
 description:         geometric-algorithms
 
 ghc-options:

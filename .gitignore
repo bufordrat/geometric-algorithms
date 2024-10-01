@@ -1,5 +1,6 @@
 **/.stack-work/*
 *~
+**/*.yaml.lock
 
 dist
 dist-*

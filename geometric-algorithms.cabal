@@ -8,8 +8,6 @@ name:           geometric-algorithms
 version:        0.1.0.0
 description:    geometric-algorithms
 build-type:     Simple
-extra-source-files:
-    README.md
 
 library
   exposed-modules:
