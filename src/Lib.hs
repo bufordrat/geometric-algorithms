@@ -9,7 +9,7 @@ type Matrix a = [[a]]
 transpose' :: Matrix a -> Matrix a
 transpose' arr =
   [ arr >>= drop x . take (x + 1)
-  | x <- [0..(maximum (map length arr) - 1)] ]
+  | x <- [0..maximum (map length arr) - 1] ]
 
 rows :: Matrix a -> [[a]]
 rows = id
