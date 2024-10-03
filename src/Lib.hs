@@ -32,18 +32,43 @@ get row col mx = do
 get' :: (Int, Int) -> Matrix a -> Maybe a
 get' = uncurry get
 
-zeroComp :: (Num a, Ord a) => [a] -> [a] -> Ordering
+zeroComp :: (Num a, Eq a) => [a] -> [a] -> Ordering
 zeroComp =
   let zilch = (== 0)
       zeroCount = length . takeWhile zilch
   in compare `on` zeroCount
 
-swap :: Ord a => (a -> a -> Ordering) -> [a] -> [a]
-swap _ [] = []
-swap cmp (x : xs) =
-  let mayb = do
-        found <- find (\e -> cmp e x == GT) xs
-        pure (found : delete found (insertBy cmp x xs))
-  in case mayb of
-    Just output -> output
-    Nothing -> x : xs
+zeroCompPred :: (Num a, Eq a) => [a] -> [a] -> Bool
+zeroCompPred lst1 lst2 =
+  let zilch = (== 0)
+      zeroCount = length . takeWhile zilch
+  in zeroCount lst1 > zeroCount lst2
+
+-- insertPred :: (Num a, Eq a) => (a -> Bool) -> a -> [a] -> [a]
+-- insertPred _ _ [] = []
+-- insertPred pred inserted (x : xs) =
+--   if pred x
+--   then x : inserted : xs
+--   else x : insertPred pred inserted xs
+  
+-- swap :: (Num a, Eq a) => (a -> a -> Bool) -> [a] -> [a]
+-- swap _ [] = []
+-- swap bigger lst@(x : xs) =
+--   let pred = not . bigger x
+--       mayb = do
+--         found <- find pred xs
+--         pure $ found : delete found (insertPred pred x xs)
+--   in case mayb of
+--     Just output -> output
+--     Nothing -> lst
+
+-- Swap :: Ord a => (a -> a -> Ordering) -> [a] -> [a]
+-- swap _ [] = []
+-- swap cmp (x : xs) =
+--   let mayb = do
+--         found <- find (\e -> cmp e x == GT) xs
+--         pure (found : delete found (insertBy cmp x xs))
+--   in case mayb of
+--     Just output -> output
+--     Nothing -> x : xs
+
