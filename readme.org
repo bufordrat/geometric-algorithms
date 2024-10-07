@@ -1,5 +1,7 @@
 * link
 https://mcrovella.github.io/CS132-Geometric-Algorithms/landing-page.html
 
-✓
-✗
+1) =example1=: ✓
+   + yes
+2) =example2=: ✗
+   + needs work
