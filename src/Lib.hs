@@ -44,6 +44,15 @@ zeroCompPred lst1 lst2 =
       zeroCount = length . takeWhile zilch
   in zeroCount lst1 > zeroCount lst2
 
+findWithIndex :: (a -> Bool) -> [a] -> Maybe (Int, a)
+findWithIndex pred lst =
+  let findWithIndex' _ _ [] = Nothing
+      findWithIndex' idx pred (x : xs) =
+        if pred x
+        then Just (idx, x)
+        else findWithIndex' (idx + 1) pred xs
+  in findWithIndex' 0 pred lst
+
 -- insertPred :: (Num a, Eq a) => (a -> Bool) -> a -> [a] -> [a]
 -- insertPred _ _ [] = []
 -- insertPred pred inserted (x : xs) =

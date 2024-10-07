@@ -1,2 +1,5 @@
 * link
 https://mcrovella.github.io/CS132-Geometric-Algorithms/landing-page.html
+
+✓
+✗
