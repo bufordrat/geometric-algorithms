@@ -1,6 +1,6 @@
 module Lib where
 
-import Data.List (transpose, delete, insertBy, find)
+import Data.List (transpose, delete)
 import Data.Function (on)
 
 type Matrix a = [[a]]
@@ -32,17 +32,17 @@ get row col mx = do
 get' :: (Int, Int) -> Matrix a -> Maybe a
 get' = uncurry get
 
-zeroComp :: (Num a, Eq a) => [a] -> [a] -> Ordering
-zeroComp =
-  let zilch = (== 0)
-      zeroCount = length . takeWhile zilch
-  in compare `on` zeroCount
+-- zeroComp :: (Num a, Eq a) => [a] -> [a] -> Ordering
+-- zeroComp =
+--   let zilch = (== 0)
+--       zeroCount = length . takeWhile zilch
+--   in compare `on` zeroCount
 
 zeroCompPred :: (Num a, Eq a) => [a] -> [a] -> Bool
 zeroCompPred lst1 lst2 =
   let zilch = (== 0)
       zeroCount = length . takeWhile zilch
-  in zeroCount lst1 > zeroCount lst2
+  in zeroCount lst2 > zeroCount lst1
 
 findWithIndex :: (a -> Bool) -> [a] -> Maybe (Int, a)
 findWithIndex pred lst =
@@ -53,31 +53,17 @@ findWithIndex pred lst =
         else findWithIndex' (idx + 1) pred xs
   in findWithIndex' 0 pred lst
 
--- insertPred :: (Num a, Eq a) => (a -> Bool) -> a -> [a] -> [a]
--- insertPred _ _ [] = []
--- insertPred pred inserted (x : xs) =
---   if pred x
---   then x : inserted : xs
---   else x : insertPred pred inserted xs
+insertAt :: Int -> a -> [a] -> [a]
+insertAt _ _ [] = []
+insertAt 0 new lst = new : lst
+insertAt n new (x : xs) = x : insertAt (n - 1) new xs
+
+-- swap :: (Num a, Eq a) => [[a]] -> Maybe [[a]]
+swap pred [] = Just []
+swap pred mtrx@(row : rows) =
+  let moreZeros r = pred row r
+      rowToSwap = do
+        (idx, r) <- findWithIndex moreZeros mtrx
+        pure (row : insertAt idx r (delete row mtrx))
+  in rowToSwap
   
--- swap :: (Num a, Eq a) => (a -> a -> Bool) -> [a] -> [a]
--- swap _ [] = []
--- swap bigger lst@(x : xs) =
---   let pred = not . bigger x
---       mayb = do
---         found <- find pred xs
---         pure $ found : delete found (insertPred pred x xs)
---   in case mayb of
---     Just output -> output
---     Nothing -> lst
-
--- Swap :: Ord a => (a -> a -> Ordering) -> [a] -> [a]
--- swap _ [] = []
--- swap cmp (x : xs) =
---   let mayb = do
---         found <- find (\e -> cmp e x == GT) xs
---         pure (found : delete found (insertBy cmp x xs))
---   in case mayb of
---     Just output -> output
---     Nothing -> x : xs
-
