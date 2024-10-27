@@ -48,3 +48,4 @@ swapByIndex idx lst@(x : xs) =
       in item : delete item lst
     Nothing -> lst
 
+-- for the actual Gaussian swap, use Data.List.find
