@@ -1,6 +1,6 @@
 module Lib where
 
-import Data.List (transpose, delete, insertBy, find)
+import Data.List (transpose, delete)
 import Data.Function (on)
 
 type Matrix a = [[a]]
@@ -32,12 +32,6 @@ get row col mx = do
 get' :: (Int, Int) -> Matrix a -> Maybe a
 get' = uncurry get
 
-zeroComp :: (Num a, Eq a) => [a] -> [a] -> Ordering
-zeroComp =
-  let zilch = (== 0)
-      zeroCount = length . takeWhile zilch
-  in compare `on` zeroCount
-
 zeroCompPred :: (Num a, Eq a) => [a] -> [a] -> Bool
 zeroCompPred lst1 lst2 =
   let zilch = (== 0)
@@ -53,31 +47,20 @@ findWithIndex pred lst =
         else findWithIndex' (idx + 1) pred xs
   in findWithIndex' 0 pred lst
 
--- insertPred :: (Num a, Eq a) => (a -> Bool) -> a -> [a] -> [a]
--- insertPred _ _ [] = []
--- insertPred pred inserted (x : xs) =
---   if pred x
---   then x : inserted : xs
---   else x : insertPred pred inserted xs
-  
--- swap :: (Num a, Eq a) => (a -> a -> Bool) -> [a] -> [a]
--- swap _ [] = []
--- swap bigger lst@(x : xs) =
---   let pred = not . bigger x
---       mayb = do
---         found <- find pred xs
---         pure $ found : delete found (insertPred pred x xs)
---   in case mayb of
---     Just output -> output
---     Nothing -> lst
+insertByIndex :: Int -> a -> [a] -> [a]
+insertByIndex _ _ [] = []
+insertByIndex idx _ lst | idx < 1 = lst
+insertByIndex 1 item (x : xs) = x : item : xs
+insertByIndex idx item (x : xs) =
+  x : insertByIndex (idx - 1) item xs
 
--- Swap :: Ord a => (a -> a -> Ordering) -> [a] -> [a]
--- swap _ [] = []
--- swap cmp (x : xs) =
---   let mayb = do
---         found <- find (\e -> cmp e x == GT) xs
---         pure (found : delete found (insertBy cmp x xs))
---   in case mayb of
---     Just output -> output
---     Nothing -> x : xs
+swapByIndex :: Eq a => Int -> [a] -> [a]
+swapByIndex idx [] = []
+swapByIndex idx lst | idx < 1 = lst
+swapByIndex idx lst@(x : xs) =
+  case safeBangBang idx lst of
+    Just item ->
+      let removed = delete item xs
+      in item : delete item lst
+    Nothing -> lst
 
