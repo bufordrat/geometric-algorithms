@@ -36,7 +36,7 @@ zeroCompPred :: (Num a, Eq a) => [a] -> [a] -> Bool
 zeroCompPred lst1 lst2 =
   let zilch = (== 0)
       zeroCount = length . takeWhile zilch
-  in zeroCount lst1 > zeroCount lst2
+  in zeroCount lst2 > zeroCount lst1
 
 findWithIndex :: (a -> Bool) -> [a] -> Maybe (Int, a)
 findWithIndex pred lst =
